@@ -5,6 +5,12 @@ Newest first. Date is the day the change shipped in this studio.
 
 ---
 
+## 2026-09-12 (v1.13.0)
+
+### Changed
+- **Mark** — the Sisyphus icon is a figure pushing a stone up the slope, in the spirit of a Greek vase, drawn for the desk rather than copied from a painting. Favicon, Windows icon, and share card follow it.
+
+---
 ## 2026-09-12 (v1.12.0)
 
 ### Added

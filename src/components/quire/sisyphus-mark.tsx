@@ -1,45 +1,32 @@
-/** Mountain + worn cobble on the climb — peak stays empty so it cannot read as a sun. */
+/** Figure, stone, and slope — a stamp of the climb, not a copy of any vase. */
 export function SisyphusMark({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
+    <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
+      <path d="M0 64V48L64 22v42z" fill="currentColor" opacity="0.2" />
       <path
-        d="M1.7 30.2 H30.3"
+        d="M0 48 L64 22"
         fill="none"
         stroke="currentColor"
-        strokeWidth="1.9"
+        strokeWidth="2.2"
         strokeLinecap="round"
       />
-      <path d="M2.8 30.2 L11.2 13.6 L22.4 6.6 L29.4 30.2 Z" fill="currentColor" opacity="0.16" />
+      <circle cx="42.2" cy="21.2" r="15.2" fill="currentColor" />
       <path
-        d="M2.8 30.2 L11.2 13.6 L22.4 6.6 L29.4 30.2"
         fill="none"
         stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinejoin="round"
+        strokeWidth="1.7"
         strokeLinecap="round"
+        opacity="0.4"
+        d="M33.4 14.6c3.2-3.8 9.2-5 14.2-2"
       />
-      <path
-        d="M11.2 13.6 L16.2 30.2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.05"
-        opacity="0.32"
-      />
-      <path
-        fill="currentColor"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinejoin="round"
-        d="M6.6 16.2 L5.2 12.2 L7.4 7.6 L12.2 5.8 L16.8 7.4 L17.4 12 L13.6 16.4 L9.2 17 Z"
-      />
-      <path
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="0.85"
-        strokeLinecap="round"
-        opacity="0.38"
-        d="M8.2 10.2 L11.6 8.6 L14.6 10.8"
-      />
+      <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" transform="translate(0 -3.2)">
+        <path strokeWidth="5.4" d="M16.8 29.2 L18.4 36.4" />
+        <path strokeWidth="4.6" d="M17.4 30.2 L27.2 23.6" />
+        <path strokeWidth="4.5" d="M18.2 36.2 L10.2 45.6" />
+        <path strokeWidth="4.5" d="M18.2 36.2 L24.2 40.2 L19.6 48.4" />
+      </g>
+      <circle cx="16.2" cy="21.4" r="4.4" fill="currentColor" />
+      <circle cx="18.4" cy="33.4" r="3.1" fill="currentColor" />
     </svg>
   );
 }
