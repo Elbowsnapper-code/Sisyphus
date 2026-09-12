@@ -5,6 +5,12 @@ Newest first. Date is the day the change shipped in this studio.
 
 ---
 
+## 2026-09-12 (v1.14.0)
+
+### Changed
+- **Mark** — the Sisyphus icon is a white marble statue pushing the stone up the mountain, on black. Favicon, Windows icon, and share card follow it.
+
+---
 ## 2026-09-12 (v1.13.0)
 
 ### Changed

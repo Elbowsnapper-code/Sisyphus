@@ -84,7 +84,7 @@ function writeAppPayload(appDir) {
       {
         name: "sisyphus",
         productName: "Sisyphus",
-        version: "1.13.0",
+        version: "1.14.0",
         private: true,
         main: "electron/main.cjs",
         description: "A local-first novel studio.",
@@ -122,7 +122,7 @@ async function stampWindowsIcon(exePath, icoPath) {
   } else {
     ResEdit.Resource.IconGroupEntry.replaceIconsForResource(res.entries, 1, 1033, icons);
   }
-  const version = "1.13.0";
+  const version = "1.14.0";
   const [maj, min, pat] = version.split(".").map((n) => Number(n) || 0);
   const versionInfos = ResEdit.Resource.VersionInfo.fromEntries(res.entries);
   for (const vi of versionInfos) {

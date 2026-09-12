@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /**
  * Rasterize public/favicon.svg into PNG + ICO used by Electron, Tauri, and the Windows exe.
+ * If electron/icon-source.png exists (sculptural raster), it is used for the 256 px
+ * Windows/Tauri icon; 16/32/48 stay the filled SVG so they stay crisp.
  * Run whenever the Sisyphus mark changes.
  */
 import { writeFileSync, mkdirSync, readFileSync, existsSync, unlinkSync, copyFileSync } from "node:fs";
@@ -12,6 +14,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const svgPath = path.join(root, "public/favicon.svg");
 const pngPath = path.join(root, "electron/icon.png");
 const icoPath = path.join(root, "electron/icon.ico");
+const sourcePath = path.join(root, "electron/icon-source.png");
 const tauriPng = path.join(root, "src-tauri/icons/icon.png");
 
 async function rasterize(size, dest) {
@@ -59,11 +62,32 @@ open(sys.argv[-1], "wb").write(header + entries + payload)
   if (result.status !== 0) throw new Error("ico write failed");
 }
 
+function resizePng(src, dest, size) {
+  const result = spawnSync(
+    "python3",
+    [
+      "-c",
+      "from PIL import Image; import sys\n"
+      + "im = Image.open(sys.argv[1]).convert('RGBA')\n"
+      + "im.resize((int(sys.argv[3]), int(sys.argv[3])), Image.Resampling.LANCZOS).save(sys.argv[2])\n",
+      src,
+      dest,
+      String(size),
+    ],
+    { stdio: "inherit" },
+  );
+  if (result.status !== 0) throw new Error("png resize failed");
+}
+
 async function main() {
   if (!existsSync(svgPath)) throw new Error("public/favicon.svg missing");
   mkdirSync(path.join(root, "electron"), { recursive: true });
   mkdirSync(path.join(root, "src-tauri/icons"), { recursive: true });
-  await rasterize(256, pngPath);
+  if (existsSync(sourcePath)) {
+    resizePng(sourcePath, pngPath, 256);
+  } else {
+    await rasterize(256, pngPath);
+  }
   writeFileSync(tauriPng, readFileSync(pngPath));
   const tauriSvg = path.join(root, "src-tauri/icons/icon.svg");
   copyFileSync(svgPath, tauriSvg);
@@ -71,7 +95,11 @@ async function main() {
   const files = [];
   for (const size of sizes) {
     const dest = path.join(root, "electron", `_ico_${size}.png`);
-    await rasterize(size, dest);
+    if (size === 256 && existsSync(pngPath)) {
+      copyFileSync(pngPath, dest);
+    } else {
+      await rasterize(size, dest);
+    }
     files.push(dest);
   }
   writeIco(files, icoPath);
