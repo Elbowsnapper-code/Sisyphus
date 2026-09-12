@@ -1,0 +1,16 @@
+node_modules/
+.project_id
+.github_repo
+.env
+.env.*
+.cache/
+.vercel/
+artifacts/
+screenshots/
+.grok/
+*.log
+desktop-dist/desktop/
+AGENTS.md
+AGENTS.project.md
+startup.sh
+public/desktop/*.zip

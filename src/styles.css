@@ -1,0 +1,635 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Times New Roman", Times, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-display: "Cinzel", "Times New Roman", serif;
+
+  --color-ink: #120e0b;
+  --color-ink-soft: #241c16;
+  --color-chrome: #2c2118;
+  --color-paper: #1c1612;
+  --color-paper-deep: #16110d;
+  --color-cream: #1c1612;
+  --color-fg: #ead9c4;
+  --color-muted: #b8a48a;
+  --color-rule: #3a2e24;
+  --color-accent: #c4a574;
+  --color-accent-fg: #1a120c;
+  --color-focus: #d4b896;
+  --color-danger: #d07068;
+  --color-name: #d4a574;
+  --color-chrome-fg: #f3ead8;
+  --color-page: #f4ead8;
+  --color-highlight-1: #e7dfd0;
+  --color-highlight-2: #ddd4c4;
+  --color-highlight-3: #ead8cc;
+
+  --text-manuscript: 1.375rem;
+  --text-manuscript--line-height: 1.7;
+  --shadow-page: 0 0 0 1px color-mix(in oklab, var(--color-ink) 8%, transparent),
+    0 1px 2px color-mix(in oklab, var(--color-ink) 4%, transparent),
+    0 18px 40px color-mix(in oklab, var(--color-ink) 8%, transparent);
+}
+
+@layer base {
+  html {
+    height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    height: 100%;
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    transition: background-color 0.22s, color 0.22s;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .manuscript {
+    color: var(--color-fg);
+    text-wrap: pretty;
+    caret-color: var(--color-accent);
+    text-align: justify;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    --indent: 1.6em;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .manuscript[data-style="modern"] {
+    --indent: 1.4em;
+  }
+  .manuscript[data-style="folio"] {
+    --indent: 1.7em;
+  }
+  .manuscript[data-style="garamond"] {
+    --indent: 1.5em;
+  }
+  .manuscript[data-font="times"] {
+    font-family: "Times New Roman", Times, serif;
+  }
+  .manuscript[data-font="georgia"] {
+    font-family: Georgia, "Times New Roman", serif;
+  }
+  .manuscript[data-font="palatino"] {
+    font-family: Palatino, "Palatino Linotype", "Book Antiqua", serif;
+  }
+  .manuscript[data-font="garamond"] {
+    font-family: "EB Garamond", Garamond, "Times New Roman", serif;
+  }
+  .manuscript[data-font="baskerville"] {
+    font-family: "Libre Baskerville", Baskerville, "Times New Roman", serif;
+  }
+  .manuscript[data-font="literata"] {
+    font-family: Literata, Georgia, serif;
+  }
+  .manuscript[data-font="sans"] {
+    font-family: var(--font-sans);
+    text-align: left;
+    -webkit-hyphens: none;
+    hyphens: none;
+  }
+  .manuscript p {
+    text-indent: var(--indent, 1.6em);
+    margin: 0;
+    line-height: 1.7;
+  }
+  .manuscript p:first-child,
+  .manuscript h1 + p,
+  .manuscript h2 + p,
+  .manuscript .scene-break + p,
+  .manuscript .scene-pov + p,
+  .manuscript p[class*="passage-"] + p {
+    text-indent: 0;
+  }
+  .manuscript h1,
+  .manuscript h2 {
+    font-family: var(--font-display);
+    text-align: center;
+    text-indent: 0;
+    text-wrap: balance;
+    font-weight: 500;
+  }
+  .manuscript h1 {
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin: 2.4em 0 1.5em;
+    font-size: 1.35em;
+  }
+  .manuscript h2 {
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin: 2em 0 1.2em;
+    font-size: 0.92em;
+    font-weight: 400;
+  }
+  .manuscript .scene-break,
+  .manuscript p.scene-break {
+    text-align: center;
+    text-indent: 0;
+    letter-spacing: 0.4em;
+    font-family: var(--font-display);
+    margin: 1.6em 0;
+  }
+  .manuscript:empty:before,
+  .manuscript.is-empty:before {
+    content: attr(data-placeholder);
+    color: var(--color-muted);
+    pointer-events: none;
+    float: left;
+    height: 0;
+    font-style: italic;
+  }
+
+  .char-ref,
+  .entity-ref {
+    cursor: pointer;
+    box-shadow: none;
+    font-style: inherit;
+    font-weight: inherit;
+    color: var(--color-name);
+    background: transparent;
+    border-bottom: none;
+    border-radius: 2px;
+    transition: background-color 0.15s;
+    text-decoration: none !important;
+  }
+  .entity-ref::spelling-error,
+  .entity-ref::grammar-error,
+  .char-ref::spelling-error,
+  .char-ref::grammar-error {
+    background: transparent;
+    text-decoration: none;
+  }
+  .entity-ref--character,
+  .char-ref {
+    color: var(--color-name);
+  }
+  .entity-ref--world {
+    color: color-mix(in oklab, var(--color-accent) 70%, var(--color-fg));
+  }
+  .entity-ref--wonder {
+    color: color-mix(in oklab, var(--color-name) 75%, #c4a574);
+  }
+  .entity-ref--city {
+    color: color-mix(in oklab, var(--color-name) 65%, var(--color-fg));
+  }
+  .entity-ref--faction {
+    color: color-mix(in oklab, var(--color-name) 80%, var(--color-danger));
+  }
+  .entity-ref--political {
+    color: color-mix(in oklab, var(--color-fg) 70%, var(--color-accent));
+  }
+  .entity-ref--religion {
+    color: color-mix(in oklab, var(--color-name) 60%, var(--color-danger));
+  }
+  .entity-ref--language {
+    color: color-mix(in oklab, var(--color-accent) 45%, var(--color-fg));
+  }
+  .entity-ref--lore {
+    color: color-mix(in oklab, var(--color-muted) 50%, var(--color-fg));
+  }
+  .entity-ref--magic {
+    color: color-mix(in oklab, var(--color-accent) 55%, var(--color-name));
+  }
+  .char-ref:hover,
+  .entity-ref:hover {
+    background: color-mix(in oklab, var(--color-name) 12%, transparent);
+  }
+
+  .entity-hover {
+    box-shadow: var(--shadow-page);
+    animation: 0.16s ease-out entity-hover-in;
+  }
+  @keyframes entity-hover-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .entity-hover {
+      animation: none;
+    }
+  }
+
+  .resize-row,
+  .resize-col {
+    background: var(--color-ink);
+    z-index: 2;
+    flex-shrink: 0;
+    transition: background-color 0.15s;
+    position: relative;
+  }
+  .resize-row {
+    cursor: row-resize;
+    height: 6px;
+  }
+  .resize-col {
+    cursor: col-resize;
+    width: 6px;
+  }
+  .resize-row:after,
+  .resize-col:after {
+    content: "";
+    position: absolute;
+  }
+  .resize-row:after {
+    inset: -5px 0;
+  }
+  .resize-col:after {
+    inset: 0 -5px;
+  }
+  .resize-row:hover,
+  .resize-col:hover,
+  .resize-row[data-active],
+  .resize-col[data-active],
+  [data-separator]:hover,
+  [data-separator][data-active] {
+    background: var(--color-accent);
+  }
+
+  .scheme-chip {
+    border-radius: 999px;
+    width: 100%;
+    height: 0.5rem;
+    display: block;
+  }
+  .scheme-chip[data-chip="harbor"] {
+    background: linear-gradient(90deg, #0c100e 42%, #6a8f80 42%);
+  }
+  .scheme-chip[data-chip="cream-red"] {
+    background: linear-gradient(90deg, #4a1c18 42%, #9c3b32 42%);
+  }
+  .scheme-chip[data-chip="coffee"] {
+    background: linear-gradient(90deg, #32281e 42%, #6f4b32 42%);
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .book-page {
+    background: var(--color-page, #f4ead8);
+    width: min(42rem, 100% - 2rem);
+    min-height: 34rem;
+    color: #1d1915;
+    box-shadow: var(--shadow-page);
+    text-align: justify;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    --indent: 1.6em;
+    padding: 3.2rem 3.4rem 2.4rem;
+    box-sizing: border-box;
+  }
+  .book-page.is-trim {
+    width: min(var(--page-w, 42rem), calc(100% - 2rem));
+    height: auto;
+    min-height: 0;
+    flex-shrink: 0;
+    aspect-ratio: var(--page-ratio, 6 / 9);
+    padding: clamp(1.25rem, 5.5%, 3.2rem) clamp(1.35rem, 7%, 3.4rem) clamp(1.1rem, 5%, 2.4rem);
+    overflow: hidden;
+  }
+  .book-page[data-style="modern"] {
+    --indent: 1.4em;
+  }
+  .book-page[data-style="folio"] {
+    --indent: 1.7em;
+  }
+  .book-page[data-style="garamond"] {
+    --indent: 1.5em;
+  }
+  .book-page .chapter-title,
+  .book-page .scene-title {
+    font-family: var(--font-display);
+    text-align: center;
+    text-indent: 0;
+    text-transform: uppercase;
+  }
+  .book-page .chapter-title {
+    letter-spacing: 0.16em;
+    margin: 0 0 2rem;
+    font-size: 1.6em;
+    font-weight: 500;
+  }
+  .book-page .scene-title {
+    letter-spacing: 0.22em;
+    margin: 1.8em 0 1em;
+    font-size: 0.85em;
+    font-weight: 400;
+  }
+  .book-body p {
+    text-indent: var(--indent, 1.6em);
+    margin: 0;
+    line-height: 1.72;
+  }
+  .book-body p:first-child,
+  .book-body h1 + p,
+  .book-body h2 + p,
+  .book-body .scene-break + p,
+  .book-body .scene-pov + p,
+  .book-body p[class*="passage-"] + p {
+    text-indent: 0;
+  }
+  .book-body .scene-break {
+    text-align: center;
+    text-indent: 0;
+    letter-spacing: 0.45em;
+    font-family: var(--font-display);
+    margin: 1.8em 0;
+  }
+
+  .running-head,
+  .running-foot {
+    font-family: var(--font-display);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    text-align: center;
+    text-indent: 0;
+    font-size: 0.7rem;
+  }
+  .running-head {
+    justify-content: space-between;
+    gap: 1rem;
+    display: flex;
+  }
+
+  .manuscript .lore-kicker,
+  .book-body .lore-kicker {
+    font-family: var(--font-display);
+    text-align: center;
+    text-indent: 0;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 1em;
+    font-size: 0.8em;
+  }
+  .manuscript .lore-quote,
+  .book-body .lore-quote {
+    text-indent: 0;
+    text-align: center;
+    font-style: italic;
+  }
+  .manuscript .lore-attr,
+  .book-body .lore-attr {
+    text-indent: 0;
+    text-align: center;
+    font-family: var(--font-display);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-top: 0.6em;
+    font-size: 0.8em;
+  }
+  .manuscript .lore-body,
+  .book-body .lore-body {
+    text-indent: 0;
+  }
+
+  .resize-line {
+    background: var(--color-ink);
+    opacity: 0.85;
+    position: relative;
+  }
+  .resize-line:after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+
+  .manuscript p.passage-system,
+  .manuscript .passage-system,
+  .book-body p.passage-system,
+  .book-body .passage-system {
+    font-family: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+    text-align: center;
+    text-indent: 0;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 1.25em 0;
+    font-size: 0.95em;
+  }
+  .manuscript p.passage-letter,
+  .manuscript .passage-letter,
+  .book-body p.passage-letter,
+  .book-body .passage-letter {
+    font-family: Palatino, "Palatino Linotype", "Book Antiqua", serif;
+    font-style: italic;
+    text-indent: 0;
+    margin: 1em 2.2em;
+  }
+  .manuscript p.passage-inscription,
+  .manuscript .passage-inscription,
+  .book-body p.passage-inscription,
+  .book-body .passage-inscription {
+    font-family: var(--font-display);
+    text-align: center;
+    text-indent: 0;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 1.4em 0;
+  }
+  .manuscript p.passage-verse,
+  .manuscript .passage-verse,
+  .book-body p.passage-verse,
+  .book-body .passage-verse {
+    text-align: center;
+    text-indent: 0;
+    font-style: italic;
+    margin: 1em 3em;
+  }
+  .manuscript p.passage-levelup,
+  .manuscript .passage-levelup,
+  .book-body p.passage-levelup,
+  .book-body .passage-levelup {
+    font-family: ui-monospace, "IBM Plex Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    text-align: center;
+    text-indent: 0;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 1.4em 0;
+    padding: 0.7em 0.9em;
+    border-top: 1px solid color-mix(in oklab, var(--color-accent) 55%, var(--color-rule));
+    border-bottom: 1px solid color-mix(in oklab, var(--color-accent) 55%, var(--color-rule));
+    color: var(--color-accent);
+    font-size: 0.95em;
+  }
+  .manuscript p.passage-pm,
+  .manuscript .passage-pm,
+  .book-body p.passage-pm,
+  .book-body .passage-pm {
+    font-family: var(--font-sans);
+    text-align: left;
+    text-indent: 0;
+    font-style: normal;
+    margin: 1.1em 12%;
+    padding: 0.85em 1em 0.9em;
+    border: 1px solid var(--color-rule);
+    background: color-mix(in oklab, var(--color-paper-deep) 70%, var(--color-cream));
+    border-radius: 0.2em 0.75em 0.75em 0.75em;
+    font-size: 0.92em;
+    line-height: 1.5;
+  }
+  .manuscript p.passage-pm::before,
+  .manuscript .passage-pm::before,
+  .book-body p.passage-pm::before,
+  .book-body .passage-pm::before {
+    content: "Private message";
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.7em;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: 0.45em;
+  }
+  .manuscript p.passage-runic,
+  .manuscript .passage-runic,
+  .book-body p.passage-runic,
+  .book-body .passage-runic {
+    font-family: "Cinzel Decorative", Cinzel, "Times New Roman", serif;
+    text-align: center;
+    text-indent: 0;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin: 1.5em 0;
+    font-size: 1.05em;
+    line-height: 1.8;
+  }
+  .manuscript p.passage-ancient,
+  .manuscript .passage-ancient,
+  .book-body p.passage-ancient,
+  .book-body .passage-ancient {
+    font-family: "EB Garamond", "Times New Roman", serif;
+    font-style: italic;
+    text-align: center;
+    text-indent: 0;
+    letter-spacing: 0.14em;
+    color: color-mix(in oklab, var(--color-fg) 72%, var(--color-muted));
+    margin: 1.5em 1.5em;
+    text-shadow: 0 0 0.4px var(--color-muted);
+    font-size: 1.05em;
+  }
+  .manuscript p.passage-epigraph,
+  .manuscript .passage-epigraph,
+  .book-body p.passage-epigraph,
+  .book-body .passage-epigraph {
+    font-family: "Libre Baskerville", Baskerville, "Times New Roman", serif;
+    font-style: italic;
+    text-align: right;
+    text-indent: 0;
+    margin: 1.4em 8% 1.6em 22%;
+    font-size: 0.95em;
+    color: color-mix(in oklab, var(--color-fg) 88%, var(--color-muted));
+  }
+  .manuscript .scene-pov,
+  .book-page .scene-pov,
+  .book-body .scene-pov {
+    text-align: center;
+    text-indent: 0;
+    font-family: var(--font-display);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-size: 0.78em;
+    color: var(--color-muted);
+    margin: 0 0 1.4em;
+  }
+  .manuscript .scene-date,
+  .book-page .scene-date,
+  .book-body .scene-date {
+    text-align: center;
+    text-indent: 0;
+    font-family: var(--font-display);
+    letter-spacing: 0.12em;
+    font-size: 0.78em;
+    color: var(--color-muted);
+    margin: 0 0 1.2em;
+  }
+}
+
+html[data-scheme="coffee"],
+html[data-scheme="harbor"],
+html[data-scheme="cream-red"] {
+  color-scheme: dark;
+}
+
+.desk-bar {
+  height: 2.75rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  background: var(--color-chrome);
+  color: var(--color-chrome-fg);
+  border-bottom: 1px solid color-mix(in oklab, var(--color-ink) 55%, transparent);
+}
+
+.desk-bar-title {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+  .book-page.is-cover {
+    padding: 0;
+    background: #111;
+  }
+
+  .cover-page-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+@media (width <= 767px) {
+  [data-split-pane] {
+    display: none !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    color: #000;
+    background: #fff;
+  }
+  .manuscript {
+    max-width: none;
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  :before,
+  :after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

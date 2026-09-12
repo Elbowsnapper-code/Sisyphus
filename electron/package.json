@@ -1,0 +1,8 @@
+{
+  "name": "sisyphus",
+  "productName": "Sisyphus",
+  "version": "1.11.0",
+  "private": true,
+  "main": "electron/main.cjs",
+  "description": "A local-first novel studio."
+}
