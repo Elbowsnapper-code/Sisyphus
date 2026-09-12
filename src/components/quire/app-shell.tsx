@@ -129,7 +129,7 @@ export function AppShell() {
 
   if (view !== "desk") {
     return (
-      <div className="flex h-dvh flex-col overflow-hidden bg-paper text-fg">
+      <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-paper text-fg">
         <FontFaces />
         <Bookshelf />
         <AppFooter mode="shelf" />
@@ -138,7 +138,7 @@ export function AppShell() {
   }
 
   return (
-    <div className="flex h-dvh flex-col overflow-hidden bg-paper text-fg">
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-paper text-fg">
       <FontFaces />
       <header className="desk-bar gap-2 px-2">
         <button
@@ -151,10 +151,10 @@ export function AppShell() {
           <span className="truncate">{project?.title || "New Project"}</span>
         </button>
       </header>
-      <div className="relative flex min-h-0 flex-1">
+      <div className="relative flex min-h-0 flex-1 overflow-hidden">
         <aside
           className={cn(
-            "flex w-72 shrink-0 flex-col border-r border-ink bg-cream",
+            "flex min-h-0 w-72 shrink-0 flex-col overflow-hidden border-r border-ink bg-cream",
             "max-md:absolute max-md:inset-0 max-md:z-30 max-md:w-full",
             mobileTab === "library" ? "max-md:flex" : "max-md:hidden",
             "md:flex",
@@ -180,7 +180,12 @@ export function AppShell() {
               <span className="truncate">Project dashboard</span>
             </button>
           </header>
-          <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+          <section
+            className={cn(
+              "flex min-w-0 flex-col overflow-hidden",
+              drawers.manuscript ? "min-h-[7rem] flex-1" : "shrink-0",
+            )}
+          >
             <header className="desk-bar">
               <button
                 type="button"
@@ -330,12 +335,19 @@ function SidebarDrawer({
   };
 
   return (
-    <section className="flex shrink-0 flex-col border-t border-ink">
+    <section
+      className={cn("flex min-h-0 flex-col border-t border-ink", open && onHeight ? "" : "shrink-0")}
+      style={
+        open && onHeight
+          ? { height: live + 50, minHeight: 88, flexGrow: 0, flexShrink: 1 }
+          : undefined
+      }
+    >
       {open && onHeight && (
         <button
           type="button"
           aria-label={`Resize ${title}`}
-          className="resize-row h-1.5 w-full cursor-row-resize bg-ink/40 hover:bg-accent"
+          className="resize-row h-1.5 w-full shrink-0 cursor-row-resize bg-ink/40 hover:bg-accent"
           onMouseDown={onResizeDown}
         />
       )}
@@ -350,7 +362,7 @@ function SidebarDrawer({
         </button>
       </header>
       {open && (
-        <div className="flex min-h-0 flex-col overflow-hidden" style={onHeight ? { height: live } : undefined}>
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
           {children}
         </div>
       )}

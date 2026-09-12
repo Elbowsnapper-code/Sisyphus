@@ -5,6 +5,18 @@ Newest first. Date is the day the change shipped in this studio.
 
 ---
 
+## 2026-09-12 (v1.12.0)
+
+### Added
+- **Linking colours** — the palette’s Linking category sets a colour for each library tint in the manuscript (character, faction, settlement, species, monster, magic, lore).
+- **Projects on the landing page** — New, Open, and Import sit on Projects. Each cover has Open, Rename, and Delete.
+
+### Changed
+- The footer is one bar across the bottom of the desk. Expanding Library, Schematic, Lookups, and Trash no longer pushes it out of sight.
+- Palette colours are grouped: Toolbar, Window, Linking.
+- Project menu keeps Rename and Project settings, plus **Projects** to leave the desk. New / Open / Import / Switch are gone from that menu.
+
+---
 ## 2026-09-12 (v1.11.0)
 
 ### Added

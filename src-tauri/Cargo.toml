@@ -1,6 +1,6 @@
 [package]
 name = "sisyphus"
-version = "1.11.0"
+version = "1.12.0"
 description = "A local-first novel studio"
 authors = ["Elbowsnapper"]
 edition = "2021"

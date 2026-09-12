@@ -128,7 +128,10 @@ export async function bindOpenedFolder(projectId: string, folder?: string) {
   if (folder) await rememberProjectPath(projectId, folder);
 }
 
-export async function applyBringIn(result: BringInResult): Promise<{ ok: boolean; message: string }> {
+export async function applyBringIn(
+  result: BringInResult,
+  opts?: { openDesk?: boolean },
+): Promise<{ ok: boolean; message: string }> {
   if (result.kind === "cancelled") return { ok: false, message: "" };
   if (result.kind === "error") return { ok: false, message: result.message };
   const s = useStudio.getState();
@@ -139,10 +142,12 @@ export async function applyBringIn(result: BringInResult): Promise<{ ok: boolean
       useStudio.getState().patchProject({ projectFolder: result.folder });
       await rememberProjectPath(id, result.folder);
     }
+    if (opts?.openDesk === false) useStudio.getState().goToShelf();
     const title = useStudio.getState().docs[id]?.title ?? "project";
     return { ok: true, message: `Opened ${title}` };
   }
-  s.createProject(result.name);
+  s.createProject(result.name, { openDesk: opts?.openDesk !== false });
   useStudio.getState().ingestPieces(result.pieces);
+  if (opts?.openDesk === false) useStudio.getState().goToShelf();
   return { ok: true, message: `Imported ${result.pieces.length} items into ${result.name}` };
 }

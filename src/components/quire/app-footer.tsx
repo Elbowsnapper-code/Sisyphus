@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
-  Check,
   FolderCog,
   Info,
   Save,
@@ -8,7 +7,7 @@ import {
   FileOutput,
   Download,
   BookImage,
-  BookPlus,
+  LayoutGrid,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -18,9 +17,6 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -30,15 +26,13 @@ import { ExportDialog } from "@/components/quire/export-dialog";
 import { AboutDialog } from "@/components/quire/about-dialog";
 import { DeskPalette } from "@/components/quire/desk-palette";
 import { useStudio } from "@/lib/store";
-import { projectOf, projects } from "@/lib/tree";
+import { projectOf } from "@/lib/tree";
 import { backupFolderName, chooseBackupFolder, createProjectBackup } from "@/lib/backup";
-import { applyBringIn, bringInFiles, INGEST_ACCEPT, openProjectFromDisk } from "@/lib/bring-in";
 import { cn } from "@/lib/utils";
 import { SisyphusMark } from "@/components/quire/sisyphus-mark";
 import { downloadDesktopZip } from "@/lib/desktop-builds";
 import { desktopBridge } from "@/lib/desktop";
 import { APP_VERSION } from "@/lib/version";
-import { defaultProjectsRoot, makeProjectDirectory, rememberProjectPath, writeProjectTree } from "@/lib/folders";
 
 export function AppFooter({
   mode = "desk",
@@ -58,15 +52,10 @@ export function AppFooter({
   const restoreSample = useStudio((s) => s.restoreSample);
   const snapshot = useStudio((s) => s.snapshot);
   const setLastBackup = useStudio((s) => s.setLastBackup);
-  const openProject = useStudio((s) => s.openProject);
   const rename = useStudio((s) => s.rename);
-  const createProject = useStudio((s) => s.createProject);
-  const setPrefs = useStudio((s) => s.setPrefs);
+  const goToShelf = useStudio((s) => s.goToShelf);
   const savedAt = useStudio((s) => s.savedAt);
-  const prefs = useStudio((s) => s.prefs);
   const desktop = typeof window !== "undefined" && Boolean(desktopBridge());
-  const fileRef = useRef<HTMLInputElement>(null);
-  const [newOpen, setNewOpen] = useState(false);
   const [renameOpen, setRenameOpen] = useState(false);
   const [saveAsOpen, setSaveAsOpen] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
@@ -74,22 +63,8 @@ export function AppFooter({
   const [exportOpen, setExportOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const project = projectOf(docs, mainId) ?? docs[currentProjectId];
-  const projectList = projects(docs);
 
   const save = () => toast.success("Saved on this device");
-
-  const createNamed = async (title: string) => {
-    const root = prefs.projectsRoot || (await defaultProjectsRoot());
-    const made = root ? await makeProjectDirectory(title, { path: root }) : { ok: false as const, reason: "skipped" };
-    const id = createProject(title, { folder: made.ok ? made.path : undefined, openDesk: mode === "desk" });
-    if (made.ok && made.path) await rememberProjectPath(id, made.path);
-    if (made.ok) {
-      const s = useStudio.getState();
-      await writeProjectTree(s.docs, id, JSON.stringify(s.snapshot(), null, 2));
-    }
-    setPrefs({ onboarded: true });
-    toast.success(mode === "desk" ? `Opened ${title}` : `Added ${title} to the shelf`);
-  };
 
   const runBackup = async () => {
     try {
@@ -178,50 +153,18 @@ export function AppFooter({
   };
 
   return (
-    <footer className="desk-bar no-print gap-1 border-t border-ink border-b-0 px-2">
-      <span className="flex items-center gap-1.5 px-1.5" aria-label="Sisyphus">
+    <footer className="desk-bar relative z-20 no-print w-full min-w-0 gap-1 overflow-hidden border-t border-ink border-b-0 px-2">
+      <span className="flex shrink-0 items-center gap-1.5 px-1.5" aria-label="Sisyphus">
         <SisyphusMark className="size-6 shrink-0" />
         <span className="font-display text-xs tracking-widest uppercase">Sisyphus</span>
       </span>
-      {mode === "shelf" ? (
-        <IconBtn label="New project" onClick={() => setNewOpen(true)}>
-          <BookPlus />
-        </IconBtn>
-      ) : (
+      {mode === "desk" && (
         <>
           <IconMenu icon={<FolderCog />} label="Project">
-            <DropdownMenuItem onSelect={() => setNewOpen(true)}>New project…</DropdownMenuItem>
-            <DropdownMenuItem
-              onSelect={() => {
-                void (async () => {
-                  const result = await openProjectFromDisk(prefs.projectsRoot);
-                  const done = await applyBringIn(result);
-                  if (done.message) toast[done.ok ? "success" : "error"](done.message);
-                })();
-              }}
-            >
-              Open project…
+            <DropdownMenuItem onSelect={() => goToShelf()}>
+              <LayoutGrid className="size-3.5" />
+              Projects
             </DropdownMenuItem>
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>Switch project</DropdownMenuSubTrigger>
-              <DropdownMenuSubContent className="min-w-52">
-                {projectList.map((item) => (
-                  <DropdownMenuItem
-                    key={item.id}
-                    onSelect={() => {
-                      openProject(item.id);
-                      toast.success(`Opened ${item.title}`);
-                    }}
-                  >
-                    <span className="flex w-4 justify-center">
-                      {item.id === currentProjectId ? <Check className="size-3.5" /> : null}
-                    </span>
-                    {item.title}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
-            <DropdownMenuItem onSelect={() => fileRef.current?.click()}>Import project…</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={() => setRenameOpen(true)}>Rename project…</DropdownMenuItem>
             <DropdownMenuItem onSelect={() => openPrefs("project")}>Project settings…</DropdownMenuItem>
@@ -263,7 +206,7 @@ export function AppFooter({
           </IconBtn>
         </>
       )}
-      <IconBtn label="Preferences" onClick={() => openPrefs(mode === "shelf" ? "sisyphus" : "sisyphus")}>
+      <IconBtn label="Preferences" onClick={() => openPrefs("sisyphus")}>
         <Settings />
       </IconBtn>
       <IconBtn label="About Sisyphus" onClick={() => setAboutOpen(true)}>
@@ -284,30 +227,6 @@ export function AppFooter({
       )}
       <div className="min-w-2 flex-1" />
       <DeskPalette />
-      <input
-        ref={fileRef}
-        type="file"
-        multiple
-        accept={INGEST_ACCEPT}
-        className="hidden"
-        onChange={async (e) => {
-          const files = Array.from(e.target.files ?? []);
-          e.target.value = "";
-          if (!files.length) return;
-          const result = await bringInFiles(files);
-          const done = await applyBringIn(result);
-          if (done.message) toast[done.ok ? "success" : "error"](done.message);
-        }}
-      />
-      <NameDialog
-        open={newOpen}
-        onOpenChange={setNewOpen}
-        title="Name this project"
-        description="Created in Projects and in your Sisyphus folder."
-        confirmLabel="Create"
-        defaultValue="Project Name"
-        onSubmit={(name) => void createNamed(name)}
-      />
       <NameDialog
         open={renameOpen}
         onOpenChange={setRenameOpen}
@@ -340,7 +259,7 @@ function IconMenu({ icon, label, children }: { icon: ReactNode; label: string; c
       <Tooltip>
         <TooltipTrigger asChild>
           <DropdownMenuTrigger asChild>
-            <Button type="button" variant="chrome" size="icon" className="size-8" aria-label={label}>
+            <Button type="button" variant="chrome" size="icon" className="size-8 shrink-0" aria-label={label}>
               {icon}
             </Button>
           </DropdownMenuTrigger>
@@ -370,7 +289,7 @@ function IconBtn({
           type="button"
           variant="chrome"
           size="icon"
-          className={cn("size-8", active && "bg-chrome-fg/15")}
+          className={cn("size-8 shrink-0", active && "bg-chrome-fg/15")}
           aria-label={label}
           onClick={onClick}
         >

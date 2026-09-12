@@ -14,18 +14,18 @@ export const GUIDE_SECTIONS: { title: string; body: string[] }[] = [
     title: "The desk",
     body: [
       "Sisyphus is a local-first novel studio. The manuscript lives on this device until you export or back it up.",
-      "Left column: Find, Project Dashboard, then Manuscript. Library, Schematic, Lookups, and Trash sit compacted at the bottom. The project name lives in the top header — click it to return to Projects. Centre: the page you are writing, with split and book preview on the editor toolbar. Footer: Sisyphus, then Project, Save, Export, Cover studio, Preferences, About, and the palette on the right.",
+      "Left column: Find, Project Dashboard, then Manuscript. Library, Schematic, Lookups, and Trash sit compacted at the bottom. The project name lives in the top header — click it to return to Projects. Centre: the page you are writing, with split and book preview on the editor toolbar. Footer: Sisyphus, then Project, Save, Export, Cover studio, Preferences, About, and the palette on the right. The footer stays on one bar across the bottom of the desk.",
     ],
   },
   {
     title: "Footer",
     body: [
-      "Project — New project (asks the project name, default Project Name, and where the folder should live — on Windows that starts at C:\\Users\\you\\Sisyphus), Open project (folder at the Projects folder), Switch project (already in this studio), Import (Scrivener, Word, Atticus, Google Docs export, EPUB, and Sisyphus JSON), Project settings.",
+      "Project — Projects (returns to the landing page), Rename project, Project settings. New, open, import, and delete live on Projects.",
       "Save — save toast, save as JSON, manual backup, choose backup folder, restore the sample novel.",
       "Export window — pick front matter, volumes, chapters, scenes, back matter, and library pages. Book-page preview uses the selected Amazon KDP, IngramSpark, or Other trim. Formats: EPUB, PDF (downloads a file), PDF (Print), Cover PDF (KDP paperback wrap), DOCX, HTML, Markdown, Sisyphus JSON. Cover PDF uses Cover studio’s wrap measurements. EPUB, HTML, and PDF pick up the Cover-page picture from Cover studio.",
       "Preferences — two panes. Sisyphus Settings: default font, style, size, scheme, backup folder, projects folder. Project Settings: auto-replace, autocomplete, read-aloud, palettes, format, custom header/footer, show scene date in exported documents, install fonts, this project’s folder, delete.",
       "Cover studio — the book-image icon after Export. Front, spine, and back only. Series, title, and author (Cinzel, all caps) sit on both the KDP ebook and the paperback wrap, which share one set of fields and sit side by side. Cover colour fills the wrap; spine colour is a toggle over the spine only. Page count can be cleared and retyped. Apply writes the front onto the Cover page.",
-      "Also on the footer: About (this guide is folded under User guide). Update sits at the top of About and pulls the latest writing desk from GitHub. The palette icon on the right sets toolbar colour, window colour, and the two type colours. Coffee is the only desk, and it is dark.",
+      "Also on the footer: About (this guide is folded under User guide). Update sits at the top of About and pulls the latest writing desk from GitHub. The palette icon on the right is grouped: Toolbar (colour and text), Window (colour and text), and Linking (character, settlement, faction, species, monster, magic, lore). Coffee is the only desk, and it is dark.",
     ],
   },
   {

@@ -164,7 +164,7 @@
     box-shadow: none;
     font-style: inherit;
     font-weight: inherit;
-    color: var(--color-name);
+    color: var(--color-link-character, var(--color-name));
     background: transparent;
     border-bottom: none;
     border-radius: 2px;
@@ -180,38 +180,44 @@
   }
   .entity-ref--character,
   .char-ref {
-    color: var(--color-name);
-  }
-  .entity-ref--world {
-    color: color-mix(in oklab, var(--color-accent) 70%, var(--color-fg));
-  }
-  .entity-ref--wonder {
-    color: color-mix(in oklab, var(--color-name) 75%, #c4a574);
-  }
-  .entity-ref--city {
-    color: color-mix(in oklab, var(--color-name) 65%, var(--color-fg));
+    color: var(--color-link-character, var(--color-name));
   }
   .entity-ref--faction {
-    color: color-mix(in oklab, var(--color-name) 80%, var(--color-danger));
+    color: var(--color-link-faction, var(--color-name));
   }
-  .entity-ref--political {
-    color: color-mix(in oklab, var(--color-fg) 70%, var(--color-accent));
+  .entity-ref--city {
+    color: var(--color-link-city, var(--color-name));
   }
-  .entity-ref--religion {
-    color: color-mix(in oklab, var(--color-name) 60%, var(--color-danger));
+  .entity-ref--species {
+    color: var(--color-link-species, var(--color-name));
   }
-  .entity-ref--language {
-    color: color-mix(in oklab, var(--color-accent) 45%, var(--color-fg));
-  }
-  .entity-ref--lore {
-    color: color-mix(in oklab, var(--color-muted) 50%, var(--color-fg));
+  .entity-ref--monster {
+    color: var(--color-link-monster, var(--color-name));
   }
   .entity-ref--magic {
-    color: color-mix(in oklab, var(--color-accent) 55%, var(--color-name));
+    color: var(--color-link-magic, var(--color-name));
+  }
+  .entity-ref--lore {
+    color: var(--color-link-lore, var(--color-name));
+  }
+  .entity-ref--world {
+    color: var(--color-link-world, var(--color-name));
+  }
+  .entity-ref--wonder {
+    color: var(--color-link-wonder, var(--color-name));
+  }
+  .entity-ref--political {
+    color: var(--color-link-political, var(--color-name));
+  }
+  .entity-ref--religion {
+    color: var(--color-link-religion, var(--color-name));
+  }
+  .entity-ref--language {
+    color: var(--color-link-language, var(--color-name));
   }
   .char-ref:hover,
   .entity-ref:hover {
-    background: color-mix(in oklab, var(--color-name) 12%, transparent);
+    background: color-mix(in oklab, currentColor 16%, transparent);
   }
 
   .entity-hover {
@@ -579,6 +585,7 @@ html[data-scheme="cream-red"] {
   height: 2.75rem;
   flex-shrink: 0;
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   background: var(--color-chrome);
   color: var(--color-chrome-fg);

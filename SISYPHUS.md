@@ -75,7 +75,7 @@ Projects on launch. Writing desk after a project is opened. Top header (same hei
 
 - Left: Find / Project Dashboard / Manuscript / Library / Schematic / Lookups / Trash. Bottom drawers start compacted. Stack headers are `desk-bar` (`h-11 bg-chrome`), same as the editor toolbar and footer.
 - Centre: main editor, optional split / book preview (icons on the editor toolbar, right)
-- Footer: Sisyphus mark + **Sisyphus**, then **Project · Save · Export · Cover studio · Preferences · About**. Palette on the right (toolbar / window / two type colours). Shelf footer is New / Settings / About / palette.
+- Footer: Sisyphus mark + **Sisyphus**, then **Project · Save · Export · Cover studio · Preferences · About**. Palette on the right (Toolbar / Window / Linking). The footer is one bar and does not leave the window when side drawers open. Project menu returns to Projects; create / open / import / delete live on the landing page.
 
 **Files:** `src/components/quire/app-shell.tsx`, `app-footer.tsx`, `bookshelf.tsx`, `desk-palette.tsx`
 
