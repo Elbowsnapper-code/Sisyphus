@@ -169,12 +169,36 @@ const UPDATE_REPO = "Sisyphus";
 const UPDATE_BRANCH = "main";
 const UPDATE_UA = "Sisyphus-Desktop";
 
-function latestUrl() {
-  return `https://raw.githubusercontent.com/${UPDATE_OWNER}/${UPDATE_REPO}/${UPDATE_BRANCH}/latest.json`;
+function latestUrl(sha) {
+  return `https://raw.githubusercontent.com/${UPDATE_OWNER}/${UPDATE_REPO}/${sha}/latest.json`;
 }
 
-function fileUrl(rel) {
-  return `https://raw.githubusercontent.com/${UPDATE_OWNER}/${UPDATE_REPO}/${UPDATE_BRANCH}/desktop-dist/${String(rel).replace(/^\/+/, "")}`;
+function fileUrl(rel, sha) {
+  return `https://raw.githubusercontent.com/${UPDATE_OWNER}/${UPDATE_REPO}/${sha}/desktop-dist/${String(rel).replace(/^\/+/, "")}`;
+}
+
+async function resolveHeadSha() {
+  const res = await fetch(`https://api.github.com/repos/${UPDATE_OWNER}/${UPDATE_REPO}/commits/${UPDATE_BRANCH}`, {
+    headers: { "User-Agent": UPDATE_UA, Accept: "application/vnd.github+json" },
+    redirect: "follow",
+  });
+  if (!res.ok) throw new Error("Could not reach the Sisyphus repository on GitHub");
+  const data = await res.json();
+  if (!data || !data.sha) throw new Error("GitHub did not return a version");
+  return data.sha;
+}
+
+async function fetchLatest() {
+  const sha = await resolveHeadSha();
+  const res = await fetch(latestUrl(sha), {
+    headers: { "User-Agent": UPDATE_UA, Accept: "application/json" },
+    redirect: "follow",
+  });
+  if (!res.ok) throw new Error("Could not reach the Sisyphus repository on GitHub");
+  const data = await res.json();
+  if (!data || !data.version) throw new Error("GitHub did not return a version");
+  data.sha = sha;
+  return data;
 }
 
 function parseVersion(v) {
@@ -201,17 +225,6 @@ function currentVersion() {
   } catch {
     return "0";
   }
-}
-
-async function fetchLatest() {
-  const res = await fetch(latestUrl(), {
-    headers: { "User-Agent": UPDATE_UA, Accept: "application/json" },
-    redirect: "follow",
-  });
-  if (!res.ok) throw new Error("Could not reach the Sisyphus repository on GitHub");
-  const data = await res.json();
-  if (!data || !data.version) throw new Error("GitHub did not return a version");
-  return data;
 }
 
 ipcMain.handle("sisyphus:check-update", async () => {
@@ -241,7 +254,7 @@ ipcMain.handle("sisyphus:apply-update", async () => {
     for (const file of files) {
       const rel = String(file.path || "").replace(/\\/g, "/").replace(/^\/+/, "");
       if (!rel || rel.includes("..")) continue;
-      const res = await fetch(fileUrl(rel), { headers: { "User-Agent": UPDATE_UA }, redirect: "follow" });
+      const res = await fetch(fileUrl(rel, latest.sha), { headers: { "User-Agent": UPDATE_UA }, redirect: "follow" });
       if (!res.ok) throw new Error(`Could not download ${rel}`);
       const dest = path.join(tmp, rel);
       fs.mkdirSync(path.dirname(dest), { recursive: true });
