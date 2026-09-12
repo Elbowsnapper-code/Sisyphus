@@ -5,6 +5,12 @@ Newest first. Date is the day the change shipped in this studio.
 
 ---
 
+## 2026-09-12 (v1.15.0)
+
+### Changed
+- **Mark** — line-art mountains, the stone, and the name in Cinzel. Favicon, Windows icon, and share card follow it.
+
+---
 ## 2026-09-12 (v1.14.0)
 
 ### Changed

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * Rasterize public/favicon.svg into PNG + ICO used by Electron, Tauri, and the Windows exe.
- * If electron/icon-source.png exists (sculptural raster), it is used for the 256 px
- * Windows/Tauri icon; 16/32/48 stay the filled SVG so they stay crisp.
+ * If electron/icon-source.png exists (Cinzel lockup), it is used for the 256 px
+ * Windows/Tauri icon; 16/32/48 stay the SVG glyph so they stay crisp.
  * Run whenever the Sisyphus mark changes.
  */
 import { writeFileSync, mkdirSync, readFileSync, existsSync, unlinkSync, copyFileSync } from "node:fs";

@@ -62,7 +62,7 @@ Grouped so related tools sit together.
 34. Auto-replace, **autocomplete list**, spellcheck, speech-rate (project or default)
 35. User guide — folded into About
 36. Export Window — resizable; **book-page preview** including cover and additional pages; EPUB / **PDF** / **PDF (Print)** / **Cover PDF** / DOCX / HTML / Markdown / JSON plus **AO3 / Royal Road / FanFiction.net copy**. EPUB/HTML/PDF use the Cover-page JPEG from Cover studio.
-37. Electron desktop — unsigned Windows zip via footer download, Save menu, About, and `/download`. Current test version **1.14.0**. About → Update pulls later desks from GitHub (`Elbowsnapper-code/Sisyphus`) without a new zip. Exe icon is the marble statue, stone, and mountain. New Project writes under `%USERPROFILE%\\Sisyphus`.
+37. Electron desktop — unsigned Windows zip via footer download, Save menu, About, and `/download`. Current test version **1.15.0**. About → Update pulls later desks from GitHub (`Elbowsnapper-code/Sisyphus`) without a new zip. Exe icon is the mountain mark with Cinzel. New Project writes under `%USERPROFILE%\\Sisyphus`.
 38. Tauri conversion — `TAURI-PLAN.md`; scaffold started (`src-tauri/`)
 39. Import — Scrivener / Word / Google Docs / Atticus / EPUB / RTF / HTML / text into a new project; unrecognised files go to Imported Library
 40. Size — IndexedDB persist; 300k / 500k / 1M word snapshots stringify in well under a second. Edit one scene at a time; closed volumes do not stay in the DOM.
